@@ -1,8 +1,8 @@
 maintainer        "Matt Solt"
 maintainer_email  "mattsolt@gmail.com"
 license           "Apache 2.0"
-description       "Installs and configures MongoDB 1.8.2"
-version           "1.8.2"
+description       "Installs and configures MongoDB 2.0.2"
+version           "2.0.2"
 
 recipe "mongodb", "Default recipe simply includes the mongodb::apt and mongodb::server recipes"
 recipe "mongodb::apt", "Installs MongoDB from 10Gen's apt source and includes init.d script"
@@ -21,7 +21,7 @@ attribute "mongodb/version",
   :display_name => "MongoDB source version",
   :description => "Which MongoDB version will be installed from source",
   :recipes => ["mongodb::source"],
-  :default => "1.8.2"
+  :default => "2.0.2"
 
 attribute "mongodb/source",
   :display_name => "MongoDB source file",

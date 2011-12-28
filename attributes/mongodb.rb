@@ -1,8 +1,10 @@
 ### SOURCE PACKAGES
-default[:mongodb][:version]           = "1.8.2"
+default[:mongodb][:version]           = "2.0.2"
 default[:mongodb][:source]            = "http://fastdl.mongodb.org/linux/mongodb-linux-#{node[:kernel][:machine]}-#{mongodb[:version]}.tgz"
-default[:mongodb][:i686][:checksum]   = "fc6bc63ba050bd372481ffe214731b00"
-default[:mongodb][:x86_64][:checksum] = "5f4a33e00e1cc5940ae62ff83286e927"
+# http://dl.mongodb.org/dl/linux/i686
+default[:mongodb][:i686][:checksum]   = "3a29002c8eeab649c8ee897ea6e79cec"
+# http://dl.mongodb.org/dl/linux/x86_64
+default[:mongodb][:x86_64][:checksum] = "c5fd658b7dd7c97589305b14a2a4ec79"
 
 bind_ip = [ "127.0.0.1" ]
 
