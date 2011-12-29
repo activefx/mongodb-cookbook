@@ -35,18 +35,6 @@
     # Journaling
     :journal => "Whether writes will be journaled or not. This feature enables fast recovery from crashes",
 
-    # Additional Configuration Options
-    :directoryperdb => "Specify use of an alternative directory structure, in which files for each database are kept in a unique directory",
-    :quiet => "Reduces amount of log output",
-    :repairpath => "Root path for temporary files created during database repair. Default is dbpath value",
-    :objcheck => "Inspect all client data for validity on receipt (useful for developing drivers)",
-    :syncdelay => "Seconds between disk syncs (0=never, but not recommended)",
-    :diaglog => "Set oplogging level where n is 0=off (default) 1=W 2=R 3=both 7=W+some reads",
-    :nocursors => "Diagnostic/debugging option",
-    :nohints => "Igonore query hints",
-    :smallfiles => "Use a smaller default file size",
-    :nounixsocket => "disable listening on unix sockets (will not create socket files at /tmp/mongodb-<port>.sock)"
-
   }.each do |option, desc|
     if config[option] && !config[option].to_s.empty?
 %>
@@ -57,9 +45,9 @@
   end
 %>
 
-<% if config[:verbose] && !config[:verbose].to_s.empty? %>
+<% if config[:verbose] %>
 # Log Verbosity
-<% if verbosity = /v{1,5}/.match(config[:verbose].to_s) %>
+<% if verbosity = /v{1,5}/.match(config[:verbosity_level]) %>
 <%= verbosity.to_s %> = true
 <% else %>
 verbose = true
@@ -67,7 +55,7 @@ verbose = true
 <% end %>
 
 # Specific IP address that mongod will listen on
-bind_ip = <%= config[:bind_ip].join(",")%>
+bind_ip = <%= config[:bind_ip] %>
 
 # Security
 <% if config[:auth] %>
@@ -107,10 +95,6 @@ opIdMem = <%= config[:opidmem] * 1024 * 1024 %>
 <% if config[:oplogsize] && config[:oplogsize].to_i != 0 %>
 # Custom size for replication operation log in MB
 oplogSize = <%= config[:oplogsize] %>
-<% end %>
-<% if config[:arbiter] && !config[:keyFile].to_s.empty?  %>
-# Address of arbiter server
-arbiter = <%= config[:arbiter] %>
 <% end %>
 
 # Master-Slave Replication
