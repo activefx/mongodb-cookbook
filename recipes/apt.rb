@@ -1,52 +1,50 @@
-#
-# Cookbook Name:: mongodb
-# Recipe:: apt
-#
-# Author:: Michael Shapiro (<koudelka@ryoukai.org>)
-#
-# Copyright 2011, Active Prospect, Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
-
-execute "apt-get update" do
-  action :nothing
+apt_repository "10gen" do
+  uri "http://downloads-distro.mongodb.org/repo/ubuntu-upstart"
+  keyserver "keyserver.ubuntu.com"
+  key "7F0CEB10"
+  distributions %w[dist]
+  components %w[10gen]
+  action :add
 end
 
-execute "add 10gen apt key" do
-  command "apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10"
-  action :nothing
+package "mongodb-10gen" do
+  version "#{node[:mongodb][:server][:version]}*"
 end
 
-template "/etc/apt/sources.list.d/mongodb.list" do
+service "mongodb" do
+  provider Chef::Provider::Service::Upstart
+  supports :start => true, :stop => true, :restart => true
+  action [:enable, :start]
+end
+
+directory node[:mongodb][:server][:dbpath] do
+  owner "mongodb"
+  group "mongodb"
+  mode "0775"
+  recursive true
+end
+
+directory node[:mongodb][:server][:logpath] do
+  owner "mongodb"
+  group "mongodb"
+  mode "0775"
+  recursive true
+end
+
+template "/etc/init/mongodb.conf" do
+  source "mongodb.upstart.erb"
   owner "root"
+  group "root"
   mode "0644"
-  source "mongodb.list.erb"
-  notifies :run, resources(:execute => "add 10gen apt key"), :immediately
-  notifies :run, resources(:execute => "apt-get update"), :immediately
+  backup false
+  notifies :restart, resources(:service => "mongodb")
 end
 
-package "mongodb-10gen"
-
-if File.exists?("/etc/init.d/mongodb") # blow away the package-provided scripts because we're going to install our own via template
-  service "mongodb" do
-    action [ :stop, :disable ]
-  end
-
-  file "/etc/init.d/mongodb" do
-    action :delete
-  end
+template node[:mongodb][:server][:config] do
+  owner "root"
+  group "root"
+  mode "0644"
+  backup false
+  notifies :restart, resources(:service => "mongodb")
 end
-
-node[:mongodb][:installed_from] = "apt"
 

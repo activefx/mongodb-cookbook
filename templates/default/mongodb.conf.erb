@@ -7,7 +7,7 @@
 # e.g., if the parent directory isn't mutable by the mongodb user.
 
 <%
-  config = node[:mongodb][@server_type]
+  config = node[:mongodb][:server]
 
   {
     # Basic Database Configuration
@@ -28,12 +28,13 @@
     :nssize => "Specify .ns file size for new databases in MB",
     :quota => "Enable quota management",
     :quotaFiles => "Determines the number of files per Database (default is 8)",
+    :diaglog => "Set oplogging level",
 
     # Sharding
     :shardsvr => "Indicates that this mongod will participate in sharding *Optional and just changes the default port",
 
     # Journaling
-    :journal => "Whether writes will be journaled or not. This feature enables fast recovery from crashes",
+    :nojournal => "Whether writes will be journaled or not. This feature enables fast recovery from crashes",
 
   }.each do |option, desc|
     if config[option] && !config[option].to_s.empty?
@@ -77,9 +78,9 @@ mms-name = <%= config[:mms_name] %>
 mms-interval = <%= config[:mms_interval] %>
 <% end %>
 
-<% if config[:replication] %>
 # Replication Options
 
+<% if config[:replication] %>
 <% if config[:autoresync] %>
 # Automatically resync if slave data is stale
 autoresync
@@ -97,7 +98,15 @@ opIdMem = <%= config[:opidmem] * 1024 * 1024 %>
 oplogSize = <%= config[:oplogsize] %>
 <% end %>
 
-# Master-Slave Replication
+# in master/slave replicated mongo databases, specify here whether
+# this is a slave or master
+#slave = true
+#source = master.example.com
+# Slave only: specify a single database to replicate
+#only = master.example.com
+# or
+#master = true
+#source = slave.example.com
 
 <% if config[:slave] %>
 # In replicated mongo databases, specify here whether this is a slave or master
@@ -114,7 +123,8 @@ only = <%= config[:slave_only] %>
 master = true
 <% end %>
 
-# Replica Sets
+# in replica set configuration, specify the name of the replica set
+# replSet = setname
 
 <% if config[:replSet] && !config[:replSet].to_s.empty?  %>
 # Use replica sets with the specified logical set name.  Typically the optional seed host list need not be specified

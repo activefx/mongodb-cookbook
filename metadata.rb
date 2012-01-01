@@ -86,10 +86,15 @@ attribute "mongodb/server/port",
   :description => "Accept connections on the specified port",
   :default => "27017"
 
-attribute "mongodb/server/system_init",
-  :display_name => "System init",
-  :description => "System service manager",
-  :default => "sysv"
+#attribute "mongodb/server/system_init",
+#  :display_name => "System init",
+#  :description => "System service manager",
+#  :default => "sysv"
+
+attribute "mongodb/server/timeout",
+  :display => "MongoDB Upstart Timeout",
+  :description => "Upstart-related, wait this long between SIGTERM and SIGKILL",
+  :default => "300"
 
 # Logging
 
@@ -171,6 +176,11 @@ attribute "mongodb/server/quotaFiles",
   :display_name => "MongoDB quota files",
   :description => "Determines the number of files per Database (default is 8)",
   :default => "8"
+
+attribute "mongodb/server/diaglog",
+  :display_name => "MongoDB oplogging level",
+  :description => "Set oplogging level where n is 0=off (default) 1=W 2=R 3=both 7=W+some reads",
+  :default => ""
 
 # MMS
 
@@ -259,10 +269,10 @@ attribute "mongodb/server/shardsvr",
 
 ### Journaling
 
-attribute "mongodb/server/journal",
+attribute "mongodb/server/nojournal",
   :display_name => "MongoDB journaling",
   :description => "Whether writes will be journaled or not. This feature enables fast recovery from crashes",
-  :default => "true"
+  :default => "false"
 
 
 

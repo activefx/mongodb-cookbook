@@ -20,4 +20,6 @@
 #
 
 include_recipe "mongodb::apt"
-include_recipe "mongodb::server"
+#include_recipe "mongodb::server"
+include_recipe "mongodb::logrotate"
+

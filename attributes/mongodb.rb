@@ -20,7 +20,9 @@ default[:mongodb][:server][:logpath]               = "/var/log/mongodb/mongodb.l
 default[:mongodb][:server][:logappend]             = true
 default[:mongodb][:server][:pidfile]               = "/var/lib/mongodb/mongod.lock"
 default[:mongodb][:server][:port]                  = 27017
-default[:mongodb][:server][:system_init]           = "sysv"
+#default[:mongodb][:server][:system_init]           = "sysv"
+default[:mongodb][:server][:timeout]               = 300
+
 
 # Logging
 default[:mongodb][:server][:cpu]                   = false
@@ -39,9 +41,10 @@ default[:mongodb][:server][:rest]                  = false
 default[:mongodb][:server][:noscripting]           = false
 default[:mongodb][:server][:notablescan]           = false
 default[:mongodb][:server][:noprealloc]            = false
-default[:mongodb][:server][:nssize]                = 16
+default[:mongodb][:server][:nssize]                = ""
 default[:mongodb][:server][:quota]                 = false
-default[:mongodb][:server][:quotaFiles]            = 8
+default[:mongodb][:server][:quotaFiles]            = ""
+default[:mongodb][:server][:diaglog]               = ""
 
 # MMS
 default[:mongodb][:server][:mms]                   = false
@@ -73,9 +76,18 @@ default[:mongodb][:server][:shardsvr]              = false
 
 ### Journaling
 
-default[:mongodb][:server][:journal]               = true
+default[:mongodb][:server][:nojournal]             = false
 
+### Logrotate
 
+# How often to logrotate:
+# * daily
+# * weekly
+# * monthly
+default[:mongodb][:logrotate][:period]             = "daily"
+
+# How many archived logfiles to keep
+default[:mongodb][:logrotate][:keep]               = 7
 
 #default[:mongodb][:server][:arbiter]               = "" # <server:port>
 
