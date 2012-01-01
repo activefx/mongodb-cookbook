@@ -2,7 +2,7 @@ apt_repository "10gen" do
   uri "http://downloads-distro.mongodb.org/repo/ubuntu-upstart"
   keyserver "keyserver.ubuntu.com"
   key "7F0CEB10"
-  distributions %w[dist]
+  distribution "dist"
   components %w[10gen]
   action :add
 end
